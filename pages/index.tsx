@@ -1,14 +1,11 @@
 import Head from 'next/head'
-import Image from 'next/image'
 import { Noto_Sans_JP } from '@next/font/google'
-import styles from '../styles/Home.module.css'
 import React, { useEffect, useState } from 'react'
 import fetcher from '../libs/fetcher'
 import QiitaArticle from '../types/QiitaArticle'
 import QiitaArticleCard from '../components/QiitaArticleCard'
 import ZennArticleList, { ZennArticle } from '../types/ZennArticle'
 import ZennArticleCard from '../components/ZennArticleCard'
-import { setTimeout } from 'timers/promises'
 
 const font_medium = Noto_Sans_JP({ weight: '400', subsets: ['latin'] })
 const font_bold = Noto_Sans_JP({ weight: '900', subsets: ['latin'] })
