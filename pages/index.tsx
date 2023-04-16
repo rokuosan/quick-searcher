@@ -8,6 +8,7 @@ import QiitaArticle from '../types/QiitaArticle'
 import QiitaArticleCard from '../components/QiitaArticleCard'
 import ZennArticleList, { ZennArticle } from '../types/ZennArticle'
 import ZennArticleCard from '../components/ZennArticleCard'
+import { setTimeout } from 'timers/promises'
 
 const font_medium = Noto_Sans_JP({ weight: '400', subsets: ['latin'] })
 const font_bold = Noto_Sans_JP({ weight: '900', subsets: ['latin'] })
@@ -39,15 +40,12 @@ export default function Home() {
 
   const getQiitaItems = (word: string, sort: string) => {
     fetcher<Array<QiitaArticle>>(
-      `${api_url}?query=${encodeURI(word)}&sort=${sort}`,{
-        headers: {
-          Authorization: `Bearer ${process.env.NEXT_PUBLIC_QIITA_TOKEN}`
-        }
-      }
+      `${api_url}?query=${encodeURI(word)}&sort=${sort}`
     )
       .then(items => {
         setQiitaArticles(items)
         window.localStorage.setItem("qiita", JSON.stringify(items))
+        console.log(items)
       })
       .catch(err => console.log(err))
   }
@@ -88,13 +86,41 @@ export default function Home() {
 
   const handleChangeSelection = (e: React.FormEvent) => {
     e.preventDefault()
-    // const elm = e.currentTarget as HTMLSelectElement
-    // console.log(elm.value)
-    // setQiitaSort(elm.value)
 
-    // setQiitaArticles([])
-    // const we = document.getElementById('search-word') as HTMLInputElement
-    // setTimeout(() => getQiitaItems(we.value, elm.value), 1000)
+
+    // 現在選択しているoptionを取得
+    const elm = e.currentTarget as HTMLSelectElement
+    const sort = elm.value
+
+    // Qiitaの記事をoptionに応じてソート
+    const list = qiitaArticles.splice(0)
+    switch (sort) {
+      case 'created':
+        list.sort((a, b) => {
+          return new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+        }
+        )
+        break
+      case 'rel':
+        list.sort((a, b) => {
+          return b.likes_count - a.likes_count
+        }
+        )
+        break
+      case 'stock':
+        list.sort((a, b) => {
+          return b.stocks_count - a.stocks_count
+        }
+        )
+        break
+      default:
+        break
+    }
+    console.log(list)
+
+    // Qiitaの記事を更新
+    setQiitaArticles(list)
+    window.localStorage.setItem("qiita", JSON.stringify(list))
   }
 
 
@@ -129,10 +155,10 @@ export default function Home() {
             <div className='py-8 max-w-[512px] w-full'>
               <div className='flex justify-between flex-wrap'>
                 <h2 className={'text-3xl py-4 ' + font_bold.className}>📗 Qiita Articles</h2>
-                <select name="sort" id="sort" onChange={handleChangeSelection}
+                <select defaultValue="rel" name="sort" id="sort" onChange={handleChangeSelection}
                   className='bg-transparent border-transparent focus:ring-0 focus:border-transparent select-none'>
                   <option value="created">新着順</option>
-                  <option selected value="rel" >関連順</option>
+                  <option value="rel" >関連順</option>
                   <option value="stock">ストック順</option>
                   <option value="like">いいね数順</option>
                 </select>

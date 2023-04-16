@@ -14,7 +14,7 @@ const ZennArticleCard = (props: Props) => {
 
   return (
     <>
-      <a href={`https://zenn.dev/${a.user.username}/articles/${a.slug}`} target="_blank">
+      <a href={`https://zenn.dev/${a.user.username}/articles/${a.slug}`} target="_blank" rel="noreferrer">
         <div className={"leading-relaxed max-w-lg p-4 rounded-lg bg-white border-2 border-white hover:border-sky-400 " + font.className}>
           <div className="pb-2">@{a.user.name}</div>
           <div className="flex items-center">

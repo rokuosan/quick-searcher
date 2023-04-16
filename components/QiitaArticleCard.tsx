@@ -14,7 +14,7 @@ const QiitaArticleCard = (props: Props) => {
 
   return (
     <>
-      <a href={a.url} target="_blank">
+      <a href={a.url} target="_blank" rel="noreferrer">
         <div className={"leading-relaxed max-w-lg p-4 rounded-lg bg-white border-2 border-white hover:border-lime-400 "+font.className}>
           <div className="pb-2">@{a.user.id}</div>
           <h4 className="text-2xl" >{a.title}</h4>
